@@ -6,7 +6,7 @@ document.body.appendChild(canvas);
 let ctx = canvas.getContext("2d");
 
 const FONT_SIZE = 30;
-ctx.font = `bold ${FONT_SIZE}px Helvetica`;
+ctx.font = `bold ${FONT_SIZE}px Comic Sans MS`;
 ctx.textAlign = 'center';
 ctx.verticalAlign = 'middle';
 ctx.textBaseline = 'top';
@@ -35,9 +35,33 @@ imageArrayPromise.then(images => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     textPromise.then(textResponse => {
-        let text = textResponse;
+      let text = formatText(canvas.getContext("2d"), textResponse, canvas.width*2/3);
 
-        ctx.fillStyle = '#000';
-        ctx.fillText(text, 0, 0);
+      ctx.fillStyle = '#000';
+
+      let middleLineNumber = text.length / 2;
+      for (let i = 0; i < text.length; i++) {
+          ctx.fillText(text[i], canvas.width / 2, canvas.height / 2 - FONT_SIZE * middleLineNumber + FONT_SIZE * i);
+      }
     })
 });
+
+function formatText(context, text, maxWidth) {
+    let words = text.split(" ");
+    let lines = [];
+    let currentLine = words[0];
+
+    for (let i = 1; i < words.length; i++) {
+        let word = words[i];
+        let width = context.measureText(currentLine + " " + word).width;
+        if (width < maxWidth) {
+            currentLine += " " + word;
+        } else {
+            lines.push(currentLine);
+            currentLine = word;
+        }
+    }
+
+    lines.push(currentLine);
+    return lines;
+};
