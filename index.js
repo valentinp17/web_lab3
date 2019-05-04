@@ -30,7 +30,7 @@ imageArrayPromise.then(images => {
     ctx.drawImage(images[0], 0, 0);
     ctx.drawImage(images[1], canvas.width / 2, 0);
     ctx.drawImage(images[2], 0, canvas.height / 2);
-    ctx.drawImage(images[3], canvas.width/2, canvas.height/2);
+    ctx.drawImage(images[3], canvas.width / 2, canvas.height / 2);
     ctx.fillStyle = "rgba(255,255,255,0.5)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -43,6 +43,14 @@ imageArrayPromise.then(images => {
       for (let i = 0; i < text.length; i++) {
           ctx.fillText(text[i], canvas.width / 2, canvas.height / 2 - FONT_SIZE * middleLineNumber + FONT_SIZE * i);
       }
+
+      //Download button
+      let link = window.document.createElement('a');
+      link.innerHTML = 'download image';
+      link.href = canvas.toDataURL();
+      link.download = "quote.png";
+      window.document.body.appendChild(link);
+
     })
 });
 
